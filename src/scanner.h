@@ -10,7 +10,6 @@ typedef struct Scanner_
 
 
 void					ScannerInit( Scanner* s );
-void					ScannerReadCommandLine( Scanner* s, int argc, const char* const* argv );
 void					ScannerScan( Scanner* s );
 
 
