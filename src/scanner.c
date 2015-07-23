@@ -13,7 +13,7 @@ ScannerInit( Scanner* s )
 void
 ScannerScan( Scanner* s )
 {
-	(void)s;
+(void)s;
 
 }
 

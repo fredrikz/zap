@@ -5,10 +5,19 @@ int main( int argc, const char* const* argv )
 {
 	Options o;
 	CommandLineInitOption( &o );
-	CommandLineParse( argc, argv, &o );
+	int err;
+  err = CommandLineParse( argc, argv, &o );
+  if ( err < 0 ) 
+    goto quit;
+  err = CommandLinePostInitOption( &o );
+  if ( err < 0 )
+    goto quit;
 
 	Scanner s;
 	ScannerInit( &s );
 	ScannerScan( &s );
+
+quit:
+  CommandLineShutdownOption( &o );
 }
 
