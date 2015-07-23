@@ -44,7 +44,7 @@ void
 CommandLineInitOption( Options* o )
 {
   memset( o, 0, sizeof(Options) );
-  ArrayCreatechar( &o->_fileData );
+  ArrayCreateuint8_t( &o->_fileData );
 }
 
 
@@ -53,7 +53,7 @@ CommandLineInitOption( Options* o )
 void
 CommandLineShutdownOption( Options* o )
 {
-  ArrayDestroychar( &o->_fileData );
+  ArrayDestroyuint8_t( &o->_fileData );
 }
 
 
@@ -76,7 +76,7 @@ CommandLinePostInitOption( Options* o )
 
   fseek( file, 0, SEEK_END );
 
-  ArraySetSizechar( &o->_fileData, (unsigned int)ftell( file ) );
+  ArraySetSizeuint8_t( &o->_fileData, (unsigned int)ftell( file ) );
   fseek( file, 0, SEEK_SET );
   fread( (void*)o->_fileData._data, o->_fileData._size, 1, file );
   fclose( file );

@@ -14,8 +14,10 @@ int main( int argc, const char* const* argv )
     goto quit;
 
 	Scanner s;
-	ScannerInit( &s );
-	ScannerScan( &s );
+	ScannerInit( &s, &o );
+	err = ScannerScan( &s, &o );
+  if ( err < 0 )
+    goto quit;
 
 quit:
   CommandLineShutdownOption( &o );

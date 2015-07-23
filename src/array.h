@@ -2,12 +2,12 @@
 #include <string.h>
 
 #define ARRAY_STRUCT( TYPE )                  \
-typedef struct Array##TYPE__                  \
+typedef struct ArrayImpl##TYPE                \
 {                                             \
   TYPE*         _data;                        \
   unsigned int  _size;                        \
   unsigned int  _capacity;                    \
-} Array##TYPE;                                \
+} Array##TYPE;                              
 
 
 

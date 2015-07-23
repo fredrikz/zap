@@ -2,14 +2,15 @@
 #define COMMANDLINE_H_
 
 #include "array.h"
+#include <stdint.h>
 
-ARRAYTYPE(char)
+ARRAYTYPE(uint8_t)
 
 typedef struct Options__
 {
   const char*     _currentWorkingDir;
   const char*     _fileName;
-  Arraychar       _fileData;
+  Arrayuint8_t    _fileData;
 } Options;
 
 
