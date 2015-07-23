@@ -1,10 +1,10 @@
 #include "scanner.h"
 #include <string.h>
-	
+  
 void
 ScannerInit( Scanner* s )
 {
-	memset( s, 0, sizeof(Scanner) );
+  memset( s, 0, sizeof(Scanner) );
 }
 
 
@@ -13,7 +13,7 @@ ScannerInit( Scanner* s )
 void
 ScannerScan( Scanner* s )
 {
-(void)s;
+  (void)s;
 
 }
 

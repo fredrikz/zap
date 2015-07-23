@@ -44,6 +44,7 @@ void
 CommandLineInitOption( Options* o )
 {
   memset( o, 0, sizeof(Options) );
+  ArrayCreatechar( &o->_fileData );
 }
 
 
@@ -52,10 +53,7 @@ CommandLineInitOption( Options* o )
 void
 CommandLineShutdownOption( Options* o )
 {
-  if ( o->_fileData )
-  {
-    free( (void*)o->_fileData );
-  }
+  ArrayDestroychar( &o->_fileData );
 }
 
 
@@ -78,10 +76,9 @@ CommandLinePostInitOption( Options* o )
 
   fseek( file, 0, SEEK_END );
 
-  o->_fileSize = (unsigned int)ftell( file );
-  o->_fileData = (const char*)malloc( o->_fileSize );
+  ArraySetSizechar( &o->_fileData, (unsigned int)ftell( file ) );
   fseek( file, 0, SEEK_SET );
-  fread( (void*)o->_fileData, o->_fileSize, 1, file );
+  fread( (void*)o->_fileData._data, o->_fileData._size, 1, file );
   fclose( file );
 
   return 0;

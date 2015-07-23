@@ -1,16 +1,26 @@
 #ifndef SCANNER_H_
 #define SCANNER_H_
 
-typedef struct Scanner_ 
+enum ScannerToken
 {
-	const char* 		_filePath;
+  TKeyword,
+  TOperator,
+  TName,
+  TNumber
+
+
+};
+
+typedef struct Scanner__
+{
+  const char*     _filePath;
 
 
 } Scanner;
 
 
-void					ScannerInit( Scanner* s );
-void					ScannerScan( Scanner* s );
+void          ScannerInit( Scanner* s );
+void          ScannerScan( Scanner* s );
 
 
 #endif

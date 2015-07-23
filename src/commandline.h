@@ -1,12 +1,15 @@
 #ifndef COMMANDLINE_H_
 #define COMMANDLINE_H_
 
+#include "array.h"
+
+ARRAYTYPE(char)
+
 typedef struct Options__
 {
   const char*     _currentWorkingDir;
   const char*     _fileName;
-  const char*     _fileData;
-  unsigned int    _fileSize;
+  Arraychar       _fileData;
 } Options;
 
 

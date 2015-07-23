@@ -1,7 +1,7 @@
 CC = clang
 LD = $(CC)
 OUTPUT_OPTION=-MMD -MP -o $@
-CFLAGS = -Wall -Werror -Weverything -pedantic-errors -Wno-padded 
+CFLAGS = -Wall -Werror -Weverything -pedantic-errors -Wno-padded -std=c11
 #-Wno-missing-prototypes
 INCLUDES = 
 LDFLAGS = -lm
