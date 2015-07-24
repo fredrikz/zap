@@ -14,7 +14,7 @@ int main( int argc, const char* const* argv )
     goto quit;
 
 	Scanner s;
-	ScannerInit( &s, &o );
+	ScannerCreate( &s, &o );
 	err = ScannerScan( &s, &o );
   if ( err < 0 )
     goto quit;

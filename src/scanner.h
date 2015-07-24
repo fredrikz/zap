@@ -11,19 +11,22 @@ enum ScannerToken
   TName,
   TNumber,
   TType,
-  TLeftParanthesis,
-  TRightParanthesis,
-  TLeftCurly,
-  TRightCurly,
-  TLeftAngleBracket,
-  TRightAngleBracket,
+  TLParan,
+  TRParan,
+  TLCurly,
+  TRCurly,
+  TLSquare,
+  TRSquare,
   TEquals,
-  TString
+  TString,
+  TComment,
+  TTotalTokenCount
 };
 
 typedef struct Token__
 {
   uint8_t*        _start;
+  unsigned int    _lineNo;
   unsigned char   _length;
   unsigned char   _token;
 } Token;
@@ -36,7 +39,8 @@ typedef struct Scanner__
 } Scanner;
 
 
-void          ScannerInit( Scanner* s, Options* o );
+void          ScannerCreate( Scanner* s, Options* o );
+void          ScannerDestroy( Scanner* s );
 int           ScannerScan( Scanner* s, Options* o );
 
 #endif
