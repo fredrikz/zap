@@ -14,8 +14,8 @@ typedef struct Options__
 } Options;
 
 
-void  CommandLineInitOption( Options* o );
-void  CommandLineShutdownOption( Options* o );
+void  CommandLineOptionCreate( Options* o );
+void  CommandLineOptionDestroy( Options* o );
 int   CommandLinePostInitOption( Options* o );
 int   CommandLineParse( int argc, const char* const* argv, Options* o );
 

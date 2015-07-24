@@ -367,10 +367,10 @@ static const char* ScannerTokenStrings[] =
   "TType",
   "TLParan",
   "TRParan",
-  "TLCurly",
-  "TRCurly",
-  "TLSquare",
-  "TRSquare",
+  "TLCurlyB",
+  "TRCurlyB",
+  "TLSquareB",
+  "TRSquareB",
   "TEquals",
   "TString",
   "TComment",
@@ -389,6 +389,14 @@ ScannerCreate( Scanner* s, Options* o )
   (void)o;
   memset( s, 0, sizeof(Scanner) );
   ArrayCreateToken( &s->_tokens );
+}
+
+
+
+void
+ScannerDestroy( Scanner* s )
+{
+  ArrayDestroyToken( &s->_tokens );
 }
 
 
@@ -622,8 +630,19 @@ ReadDirective( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lin
     ++curr;
   }
 
-  AddToken( TDirective, start, curr, arr, *lineNo );
-  return 0;
+  const char* key = (const char*)(*start + 1);
+  unsigned int len = (unsigned int)((curr - *start) - 1);
+
+  const struct KeywordInfo* info = KeywordLookup( key, len );
+  if ( info && info->_token == TDirective )
+  {
+    AddToken( TDirective, start, curr, arr, *lineNo );
+    return 0;
+  }
+  
+  printf( "Line %u: Illegal directive '%.*s'\n", *lineNo, (unsigned int)(curr - *start), *start );
+  *start = curr;
+  return -1;
 }
 
 
@@ -747,7 +766,4 @@ ScannerScan( Scanner* s, Options* o )
 
   return success;
 }
-
-
-
 

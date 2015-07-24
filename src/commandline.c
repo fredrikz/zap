@@ -41,7 +41,7 @@ const static ArgumentOption validOptions[] =
 
 
 void
-CommandLineInitOption( Options* o )
+CommandLineOptionCreate( Options* o )
 {
   memset( o, 0, sizeof(Options) );
   ArrayCreateuint8_t( &o->_fileData );
@@ -51,7 +51,7 @@ CommandLineInitOption( Options* o )
 
 
 void
-CommandLineShutdownOption( Options* o )
+CommandLineOptionDestroy( Options* o )
 {
   ArrayDestroyuint8_t( &o->_fileData );
 }
