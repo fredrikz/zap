@@ -3,6 +3,13 @@
 #include <stdio.h>
 #include "commandline.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-field-initializers"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wstatic-in-inline"
+#include "keywords.h"
+#pragma clang diagnostic pop
+
 enum CharType {
   Invalid,
   Whitespace,
@@ -590,7 +597,9 @@ ReadAlphaNumeric( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* 
     ++curr;
   }
 
-  AddToken( TName, start, curr, arr, *lineNo );
+  const struct KeywordInfo* info = KeywordLookup( (const char*)*start, (unsigned int)(curr - *start) );
+  enum ScannerToken tok = info ? info->_token : TName;
+  AddToken( tok, start, curr, arr, *lineNo );
   return 0;
 }
 

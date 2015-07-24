@@ -1,0 +1,39 @@
+struct KeywordInfo { const char* _name; enum ScannerToken _token; };
+%%
+# primitive types
+i8,         TType
+i16,        TType
+i32,        TType
+i64,        TType
+i128,       TType
+u1,         TType
+u8,         TType
+u16,        TType
+u32,        TType
+u64,        TType
+u128,       TType
+f16,        TType
+f32,        TType
+f64,        TType
+f128,       TType
+str,        TType
+# compound types
+mat2,       TType
+mat3,       TType
+mat4,       TType
+vec2,       TType
+vec3,       TType
+vec4,       TType
+# keywords
+constant,   TKeyword
+fn,         TKeyword
+if,         TKeyword
+else,       TKeyword
+for,        TKeyword
+return,     TKeyword
+null,       TKeyword
+break,      TKeyword
+# directives
+depends,    TDirective
+line,       TDirective
+file,       TDirective
