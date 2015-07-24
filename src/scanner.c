@@ -41,135 +41,318 @@ charTypes[256] =
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
+
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
+
   Whitespace,   // '\n'
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
+
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
+
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
+
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
   Invalid,      // ''
+
   Invalid,      // ''
   Invalid,      // ''
   Whitespace,   // ' '
   Control,      // '!'
   Control,      // '"'
+
   Control,      // '#'
   Control,      // '$'
   Control,      // '%'
   Control,      // '&'
   Control,      // '''
+
   Control,      // '('
   Control,      // ')'
   Control,      // '*'
   Control,      // '+'
   Control,      // ','
+
   Control,      // '-'
   Control,      // '.'
   Control,      // '/'
   Numeric,      // '0'
   Numeric,      // '1'
+
   Numeric,      // '2'
   Numeric,      // '3'
   Numeric,      // '4'
   Numeric,      // '5'
   Numeric,      // '6'
+
   Numeric,      // '7'
   Numeric,      // '8'
   Numeric,      // '9'
   Control,      // ':'
   Control,      // ';'
+
   Control,      // '<'
   Control,      // '='
   Control,      // '>'
   Control,      // '?'
   Control,      // '@'
+
   Alpha,        // 'A'
   Alpha,        // 'B'
   Alpha,        // 'C'
   Alpha,        // 'D'
   Alpha,        // 'E'
+
   Alpha,        // 'F'
   Alpha,        // 'G'
   Alpha,        // 'H'
   Alpha,        // 'I'
   Alpha,        // 'J'
+
   Alpha,        // 'K'
   Alpha,        // 'L'
   Alpha,        // 'M'
   Alpha,        // 'N'
   Alpha,        // 'O'
+
   Alpha,        // 'P'
   Alpha,        // 'Q'
   Alpha,        // 'R'
   Alpha,        // 'S'
   Alpha,        // 'T'
+
   Alpha,        // 'U'
   Alpha,        // 'V'
   Alpha,        // 'W'
   Alpha,        // 'X'
   Alpha,        // 'Y'
+
   Alpha,        // 'Z'
   Control,      // '['
   Control,      // '\'
   Control,      // ']'
   Control,      // '^'
+
   Alpha,        // '_' // Special case
   Control,      // '`'
   Alpha,        // 'a'
   Alpha,        // 'b'
   Alpha,        // 'c'
+
   Alpha,        // 'd'
   Alpha,        // 'e'
   Alpha,        // 'f'
   Alpha,        // 'g'
   Alpha,        // 'h'
+
   Alpha,        // 'i'
   Alpha,        // 'j'
   Alpha,        // 'k'
   Alpha,        // 'l'
   Alpha,        // 'm'
+
   Alpha,        // 'n'
   Alpha,        // 'o'
   Alpha,        // 'p'
   Alpha,        // 'q'
   Alpha,        // 'r'
+
   Alpha,        // 's'
   Alpha,        // 't'
   Alpha,        // 'u'
   Alpha,        // 'v'
   Alpha,        // 'w'
+
   Alpha,        // 'x'
   Alpha,        // 'y'
   Alpha,        // 'z'
   Control,      // '{'
   Control,      // '|'
+
   Control,      // '}'
   Control,      // '~'
   Invalid       // ''
 };
 
+static enum ScannerToken
+controlTokenTypes[256] = 
+{
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+
+  TInvalid,      // '\n'
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ''
+
+  TInvalid,      // ''
+  TInvalid,      // ''
+  TInvalid,      // ' '
+  TInvalid,      // '!'
+  TInvalid,      // '"'
+
+  TInvalid,      // '#'
+  TInvalid,      // '$'
+  TInvalid,      // '%'
+  TInvalid,      // '&'
+  TInvalid,      // '''
+
+  TLParan,       // '('
+  TRParan,       // ')'
+  TOperator,     // '*'
+  TOperator,     // '+'
+  TComma,        // ','
+
+  TOperator,     // '-'
+  TDot,          // '.'
+  TOperator,     // '/'
+  TInvalid,      // '0'
+  TInvalid,      // '1'
+
+  TInvalid,      // '2'
+  TInvalid,      // '3'
+  TInvalid,      // '4'
+  TInvalid,      // '5'
+  TInvalid,      // '6'
+
+  TInvalid,      // '7'
+  TInvalid,      // '8'
+  TInvalid,      // '9'
+  TColon,        // ':'
+  TSemiColon,    // ';'
+
+  TInvalid,      // '<'
+  TEquals,       // '='
+  TInvalid,      // '>'
+  TInvalid,      // '?'
+  TInvalid,      // '@'
+
+  TInvalid,      // 'A'
+  TInvalid,      // 'B'
+  TInvalid,      // 'C'
+  TInvalid,      // 'D'
+  TInvalid,      // 'E'
+
+  TInvalid,      // 'F'
+  TInvalid,      // 'G'
+  TInvalid,      // 'H'
+  TInvalid,      // 'I'
+  TInvalid,      // 'J'
+
+  TInvalid,      // 'K'
+  TInvalid,      // 'L'
+  TInvalid,      // 'M'
+  TInvalid,      // 'N'
+  TInvalid,      // 'O'
+
+  TInvalid,      // 'P'
+  TInvalid,      // 'Q'
+  TInvalid,      // 'R'
+  TInvalid,      // 'S'
+  TInvalid,      // 'T'
+
+  TInvalid,      // 'U'
+  TInvalid,      // 'V'
+  TInvalid,      // 'W'
+  TInvalid,      // 'X'
+  TInvalid,      // 'Y'
+
+  TInvalid,      // 'Z'
+  TLSquareB,     // '['
+  TInvalid,      // '\'
+  TRSquareB,     // ']'
+  TInvalid,      // '^'
+
+  TInvalid,      // '_' // Special case
+  TInvalid,      // '`'
+  TInvalid,      // 'a'
+  TInvalid,      // 'b'
+  TInvalid,      // 'c'
+
+  TInvalid,      // 'd'
+  TInvalid,      // 'e'
+  TInvalid,      // 'f'
+  TInvalid,      // 'g'
+  TInvalid,      // 'h'
+
+  TInvalid,      // 'i'
+  TInvalid,      // 'j'
+  TInvalid,      // 'k'
+  TInvalid,      // 'l'
+  TInvalid,      // 'm'
+
+  TInvalid,      // 'n'
+  TInvalid,      // 'o'
+  TInvalid,      // 'p'
+  TInvalid,      // 'q'
+  TInvalid,      // 'r'
+
+  TInvalid,      // 's'
+  TInvalid,      // 't'
+  TInvalid,      // 'u'
+  TInvalid,      // 'v'
+  TInvalid,      // 'w'
+
+  TInvalid,      // 'x'
+  TInvalid,      // 'y'
+  TInvalid,      // 'z'
+  TLCurlyB,      // '{'
+  TInvalid,      // '|'
+
+  TRCurlyB,      // '}'
+  TInvalid,      // '~'
+  TInvalid       // ''
+};
 
 
 static const char* ScannerTokenStrings[] =
 {
+  "TInvalid",
   "TKeyword",
   "TOperator",
   "TName",
@@ -183,7 +366,12 @@ static const char* ScannerTokenStrings[] =
   "TRSquare",
   "TEquals",
   "TString",
-  "TComment"
+  "TComment",
+  "TDot",
+  "TColon",
+  "TSemiColon",
+  "TComma",
+  "TDirective"
 };
 
 
@@ -220,6 +408,7 @@ static inline int
 ReadCharacterString( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
   unsigned int beginLineNo = *lineNo;
+  ++(*start);
   uint8_t* curr = *start;
   while ( curr != end )
   {
@@ -227,6 +416,7 @@ ReadCharacterString( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned in
       && *(curr-1) != '\\' )
     {
       AddToken( TString, start, curr, arr, beginLineNo );
+      ++(*start);
       return 0;
     }
     else if ( *curr == '\n' )
@@ -246,12 +436,14 @@ static inline int
 ReadSingleLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
   unsigned int beginLineNo = *lineNo;
+  *start += 2;
   uint8_t* curr = *start;
   while ( curr != end )
   {
     if ( *curr == '\n' )
     {
       AddToken( TComment, start, curr, arr, beginLineNo );
+      ++(*start);
       ++(*lineNo);
       return 0;
     }
@@ -268,6 +460,7 @@ static inline int
 ReadMultiLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
   unsigned int beginLineNo = *lineNo;
+  *start += 2;
   uint8_t* curr = *start;
 
   int nested = 1;
@@ -285,6 +478,7 @@ ReadMultiLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned i
         if ( nested == 0 )
         {
           AddToken( TComment, start, curr, arr, beginLineNo );
+          *start += 2;
           return 0;
         }
       }
@@ -309,7 +503,6 @@ ReadMultiLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned i
 static inline int
 ReadNumber( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
-  unsigned int beginLineNo = *lineNo;
   uint8_t* curr = *start;
 
   unsigned int accepted = 10;
@@ -370,10 +563,11 @@ ReadNumber( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo
   if ( curr == atLeastOne )
   {
     printf( "Line %u: Illegal number specification\n", *lineNo );
+    *start = curr;
     return -1;
   }
 
-  AddToken( TNumber, start, curr, arr, beginLineNo );
+  AddToken( TNumber, start, curr, arr, *lineNo );
   return 0;
 }
 
@@ -382,7 +576,6 @@ ReadNumber( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo
 static inline int
 ReadAlphaNumeric( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
-  unsigned int beginLineNo = *lineNo;
   uint8_t* curr = *start;
   ++curr; // skip first, it's an 'Alpha'
 
@@ -397,7 +590,30 @@ ReadAlphaNumeric( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* 
     ++curr;
   }
 
-  AddToken( TName, start, curr, arr, beginLineNo );
+  AddToken( TName, start, curr, arr, *lineNo );
+  return 0;
+}
+
+
+
+static inline int
+ReadDirective( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
+{
+  uint8_t* curr = *start;
+  ++curr; // skip first, it's '#'
+
+  while ( curr != end )
+  {
+    enum CharType t = charTypes[*curr];
+
+    if ( !( t == Alpha || t == Numeric ) )
+    {
+      break;
+    }
+    ++curr;
+  }
+
+  AddToken( TDirective, start, curr, arr, *lineNo );
   return 0;
 }
 
@@ -415,7 +631,7 @@ ScannerScan( Scanner* s, Options* o )
   uint8_t* end = o->_fileData._data + o->_fileData._size;
   unsigned int lineNo = 1;
 
-  for (; curr < end; ++curr )
+  while ( curr < end )
   {
     int retVal = 0;
     uint8_t sourceChar = *curr;
@@ -427,7 +643,6 @@ ScannerScan( Scanner* s, Options* o )
       switch ( sourceChar )
       {
       case '"':
-        ++curr;
         retVal = ReadCharacterString( &curr, end, &s->_tokens, &lineNo );
         break;
       case '/':
@@ -435,17 +650,35 @@ ScannerScan( Scanner* s, Options* o )
         {
           if ( *(curr+1) == '/' )
           {
-            curr += 2;
             retVal = ReadSingleLineComment( &curr, end, &s->_tokens, &lineNo );
             break;
           }
           else if ( *(curr+1) == '*' )
           {
-            curr += 2;
             retVal = ReadMultiLineComment( &curr, end, &s->_tokens, &lineNo );
             break;
           }
         }
+        AddToken( TOperator, &curr, curr+1, &s->_tokens, lineNo );
+        break;
+      case '#':
+        retVal = ReadDirective( &curr, end, &s->_tokens, &lineNo );
+        break;
+      default:
+        {
+          enum ScannerToken tokType = controlTokenTypes[sourceChar];
+          if ( tokType != TInvalid )
+          {
+            AddToken( tokType, &curr, curr+1, &s->_tokens, lineNo );
+          }
+          else
+          {      
+            printf( "Line %u: Illegal control character found, '%c'\n", lineNo, (char)sourceChar );
+            retVal = -1;
+            ++curr;
+          }
+        }
+        break;
       }
       break;
     case Numeric:
@@ -459,6 +692,7 @@ ScannerScan( Scanner* s, Options* o )
       {
         ++lineNo;
       }
+      ++curr;
       break;
     case Invalid:
     default:
@@ -475,9 +709,12 @@ ScannerScan( Scanner* s, Options* o )
           readable = "carrige return";
         }
 
-        printf( "Illegal character found in source file, '%s'(0x%x)\n", readable, (unsigned int)sourceChar );
+        printf( "Line %u: Illegal character found, '%s'(0x%x)\n", lineNo, readable, (unsigned int)sourceChar );
         retVal = -1;
+
+        ++curr;
       }
+      break;
     }
 
     if ( retVal == -1 )

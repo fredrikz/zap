@@ -6,6 +6,7 @@
 
 enum ScannerToken
 {
+  TInvalid,
   TKeyword,
   TOperator,
   TName,
@@ -13,13 +14,18 @@ enum ScannerToken
   TType,
   TLParan,
   TRParan,
-  TLCurly,
-  TRCurly,
-  TLSquare,
-  TRSquare,
+  TLCurlyB,
+  TRCurlyB,
+  TLSquareB,
+  TRSquareB,
   TEquals,
   TString,
   TComment,
+  TDot,
+  TColon,
+  TSemiColon,
+  TComma,
+  TDirective,
   TTotalTokenCount
 };
 

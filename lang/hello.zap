@@ -1,4 +1,4 @@
-#depend( "io" );
+#depend "io";
 
 fn main( str[] args : i32 )
 {
