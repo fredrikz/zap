@@ -6,7 +6,7 @@ INCLUDES =
 LDFLAGS = -lm
 
 
-SRC = $(wildcard src/*.c)
+SRC = $(wildcard src/*.c) $(wildcard src/generator/*.c)
 OBJ = $(SRC:%.c=%.o)
 DEP = $(SRC:%.c=%.d)
 -include $(DEP)
@@ -17,6 +17,9 @@ DEP = $(SRC:%.c=%.d)
 
 zap: $(OBJ)
 	$(CC) $(LDFLAGS) $(OBJ) -o zap $(LOADLIBES) $(LDLIBS)
+
+grammar: zap
+	./zap -g grammar/zap.grammar
 
 clean:
 	rm -f $(OBJ) $(DEP)

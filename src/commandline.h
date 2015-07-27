@@ -6,11 +6,14 @@
 
 ARRAYTYPE(uint8_t)
 
-typedef struct Options__
+typedef struct Options
 {
   const char*     _currentWorkingDir;
   const char*     _fileName;
   Arrayuint8_t    _fileData;
+
+  const char*     _grammarFileName;
+  Arrayuint8_t    _grammarFileData;
 } Options;
 
 

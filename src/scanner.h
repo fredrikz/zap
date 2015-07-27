@@ -1,8 +1,8 @@
 #ifndef SCANNER_H_
 #define SCANNER_H_
 
-#include "commandline.h"
 #include "array.h"
+#include <stdint.h>
 
 enum ScannerToken
 {
@@ -29,7 +29,7 @@ enum ScannerToken
   TTotalTokenCount
 };
 
-typedef struct Token__
+typedef struct Token
 {
   uint8_t*        _start;
   unsigned int    _lineNo;
@@ -39,15 +39,16 @@ typedef struct Token__
 
 ARRAYTYPE(Token)
 
-typedef struct Scanner__
+typedef struct Scanner
 {
   ArrayToken      _tokens;
 } Scanner;
 
+struct Options;
 
-void          ScannerCreate( Scanner* s, Options* o );
+void          ScannerCreate( Scanner* s, struct Options* o );
 void          ScannerDestroy( Scanner* s );
-int           ScannerScan( Scanner* s, Options* o );
+int           ScannerScan( Scanner* s, struct Options* o );
 
 #endif
 

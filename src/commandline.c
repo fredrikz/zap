@@ -32,10 +32,25 @@ ReadFile( int currArg, int argc, const char* const* argv, Options* o )
 
 
 
+static int
+ReadGrammarFile( int currArg, int argc, const char* const* argv, Options* o )
+{
+  if ( currArg >= argc - 1 )
+  {
+    printf( "Expected filename after '%s'.\n", argv[currArg] );
+    return -1;
+  }
+
+  o->_grammarFileName = argv[currArg + 1];
+
+  return 1;
+}
+
+
 const static ArgumentOption validOptions[] = 
 {
-  { "file",   'f',      "File to be compiled", &ReadFile }
-
+  { "file",       'f',      "<arg>: File to be compiled", &ReadFile },
+  { "grammar",    'g',      "<arg>: Grammar file to be compiled", &ReadGrammarFile }
 };
 
 
@@ -45,6 +60,7 @@ CommandLineOptionCreate( Options* o )
 {
   memset( o, 0, sizeof(Options) );
   ArrayCreateuint8_t( &o->_fileData );
+  ArrayCreateuint8_t( &o->_grammarFileData );
 }
 
 
@@ -54,6 +70,30 @@ void
 CommandLineOptionDestroy( Options* o )
 {
   ArrayDestroyuint8_t( &o->_fileData );
+  ArrayDestroyuint8_t( &o->_grammarFileData );
+}
+
+
+
+static int
+LoadFile( const char* fileName, Arrayuint8_t* arr )
+{
+  FILE* file = fopen( fileName, "rb" );
+  if ( file == 0 )
+  {
+    printf( "Could not open '%s' for reading.\n", fileName );
+    return -1;
+  }
+
+  fseek( file, 0, SEEK_END );
+
+  ArraySetSizeuint8_t( arr, (unsigned int)ftell( file ) );
+  fseek( file, 0, SEEK_SET );
+  fread( (void*)arr->_data, arr->_size, 1, file );
+  fclose( file );
+
+  return 0;
+
 }
 
 
@@ -61,27 +101,33 @@ CommandLineOptionDestroy( Options* o )
 int
 CommandLinePostInitOption( Options* o )
 {
-  if ( o->_fileName == 0 )
-  {
-    printf( "Missing '--filename' argument.\n" );
+  if ( o->_fileName == 0 && o->_grammarFileName == 0 )
+  { 
+    printf( "Missing '--filename' or '--grammar' argument.\n" );
     return -1;
   }
 
-  FILE* file = fopen( o->_fileName, "rb" );
-  if ( file == 0 )
+  int retVal = 0;
+
+  if ( o->_fileName )
   {
-    printf( "Could not open '%s' for reading.\n", o->_fileName );
-    return -1;
+    int tmp = LoadFile( o->_fileName, &o->_fileData );
+    if ( tmp != 0 )
+    {
+      retVal = tmp;
+    }
   }
 
-  fseek( file, 0, SEEK_END );
+  if ( o->_grammarFileName )
+  {
+    int tmp = LoadFile( o->_grammarFileName, &o->_grammarFileData );
+    if ( tmp != 0 )
+    {
+      retVal = tmp;
+    }
+  }
 
-  ArraySetSizeuint8_t( &o->_fileData, (unsigned int)ftell( file ) );
-  fseek( file, 0, SEEK_SET );
-  fread( (void*)o->_fileData._data, o->_fileData._size, 1, file );
-  fclose( file );
-
-  return 0;
+  return retVal;
 }
 
 
