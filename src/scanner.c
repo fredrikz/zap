@@ -360,25 +360,36 @@ controlTokenTypes[256] =
 static const char* ScannerTokenStrings[] =
 {
   "TInvalid",
-  "TKeyword",
   "TOperator",
-  "TName",
+  "TIdentifier",
   "TNumber",
-  "TType",
+  "TInt",
+  "TUInt",
+  "TFloat",
+  "TString",
+  "TDot",
+  "TColon",
+  "TSemiColon",
+  "TComma",
+  "TEquals",
   "TLParan",
   "TRParan",
   "TLCurlyB",
   "TRCurlyB",
   "TLSquareB",
   "TRSquareB",
-  "TEquals",
-  "TString",
-  "TComment",
-  "TDot",
-  "TColon",
-  "TSemiColon",
-  "TComma",
-  "TDirective"
+  "TKW_Constant",
+  "TKW_Fn",
+  "TKW_If",
+  "TKW_Else",
+  "TKW_For",
+  "TKW_Return",
+  "TKW_Null",
+  "TKW_Break",
+  "TKW_True",
+  "TKW_False",
+  "TKW_Depends",
+  "TComment"
 };
 
 
@@ -606,13 +617,13 @@ ReadAlphaNumeric( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* 
   }
 
   const struct KeywordInfo* info = KeywordLookup( (const char*)*start, (unsigned int)(curr - *start) );
-  enum ScannerToken tok = info ? info->_token : TName;
+  enum ScannerToken tok = info ? info->_token : TIdentifier;
   AddToken( tok, start, curr, arr, *lineNo );
   return 0;
 }
 
 
-
+#if 0 // Currently, 'directives' are keywords
 static inline int
 ReadDirective( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
@@ -644,6 +655,7 @@ ReadDirective( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lin
   *start = curr;
   return -1;
 }
+#endif
 
 
 
@@ -689,9 +701,9 @@ ScannerScan( Scanner* s, Options* o )
         }
         AddToken( TOperator, &curr, curr+1, &s->_tokens, lineNo );
         break;
-      case '#':
-        retVal = ReadDirective( &curr, end, &s->_tokens, &lineNo );
-        break;
+      //case '#':
+      //  retVal = ReadDirective( &curr, end, &s->_tokens, &lineNo );
+      //  break;
       default:
         {
           enum ScannerToken tokType = controlTokenTypes[sourceChar];
@@ -757,7 +769,7 @@ ScannerScan( Scanner* s, Options* o )
   for ( unsigned int i = 0; i < s->_tokens._size; ++i )
   {
     Token* tok = &s->_tokens._data[i];
-    printf( "[%-10s,%6u]: '%.*s'\n", 
+    printf( "[%-14s,%6u]: '%.*s'\n", 
         ScannerTokenStrings[tok->_token], 
         tok->_lineNo, 
         tok->_length,

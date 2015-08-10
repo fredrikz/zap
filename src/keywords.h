@@ -1,6 +1,6 @@
 /* C code produced by gperf version 3.0.4 */
 /* Command-line: gperf --output-file=keywords.h -7 -c -C -E -t -K _name -H KeywordHash -N KeywordLookup keywords.gperf  */
-/* Computed positions: -k'1,$' */
+/* Computed positions: -k'1-2' */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
       && ('%' == 37) && ('&' == 38) && ('\'' == 39) && ('(' == 40) \
@@ -31,7 +31,7 @@ error "gperf generated tables don't work with this execution character set. Plea
 
 #line 1 "keywords.gperf"
 struct KeywordInfo { const char* _name; enum ScannerToken _token; };
-/* maximum key range = 63, duplicates = 0 */
+/* maximum key range = 47, duplicates = 0 */
 
 #ifdef __GNUC__
 __inline
@@ -47,21 +47,21 @@ KeywordHash (str, len)
 {
   static const unsigned char asso_values[] =
     {
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 25,
-      15, 30,  0, 65, 30, 65,  0, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65, 65, 65,
-      65, 65, 65, 65, 65, 65, 65, 65,  0, 25,
-       0, 30, 10, 65, 65,  5, 65,  0, 25, 20,
-       0, 65, 65, 65, 35, 15, 25,  0, 15, 65,
-      65, 65, 65, 65, 65, 65, 65, 65
+      49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49, 49,  0,
+      49, 30, 49, 49, 15, 49,  5, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49, 49, 49,
+      49, 49, 49, 49, 49, 49, 49,  0,  0,  0,
+      15,  0, 10, 49, 49,  5, 49, 49, 25, 49,
+      15,  3, 49, 49,  0, 25, 20,  0, 49, 49,
+      49, 49, 49, 49, 49, 49, 49, 49
     };
-  return len + asso_values[(unsigned char)str[len - 1]] + asso_values[(unsigned char)str[0]];
+  return len + asso_values[(unsigned char)str[1]] + asso_values[(unsigned char)str[0]];
 }
 
 #ifdef __GNUC__
@@ -77,95 +77,77 @@ KeywordLookup (str, len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 33,
+      TOTAL_KEYWORDS = 27,
       MIN_WORD_LENGTH = 2,
       MAX_WORD_LENGTH = 8,
       MIN_HASH_VALUE = 2,
-      MAX_HASH_VALUE = 64
+      MAX_HASH_VALUE = 48
     };
 
   static const struct KeywordInfo wordlist[] =
     {
       {""}, {""},
-#line 10 "keywords.gperf"
-      {"u8",         TType},
-#line 13 "keywords.gperf"
-      {"u64",        TType},
+#line 9 "keywords.gperf"
+      {"u1",         TUInt},
+#line 11 "keywords.gperf"
+      {"u16",        TUInt},
 #line 14 "keywords.gperf"
-      {"u128",       TType},
+      {"u128",       TUInt},
 #line 35 "keywords.gperf"
-      {"break",      TKeyword},
-      {""},
-#line 4 "keywords.gperf"
-      {"i8",         TType},
-#line 7 "keywords.gperf"
-      {"i64",        TType},
+      {"break",      TKW_Break},
+#line 33 "keywords.gperf"
+      {"return",     TKW_Return},
+#line 10 "keywords.gperf"
+      {"u8",         TUInt},
+#line 5 "keywords.gperf"
+      {"i16",        TInt},
 #line 8 "keywords.gperf"
-      {"i128",       TType},
+      {"i128",       TInt},
+      {""},
+#line 28 "keywords.gperf"
+      {"constant",   TKW_Constant},
+#line 4 "keywords.gperf"
+      {"i8",         TInt},
+#line 15 "keywords.gperf"
+      {"f16",        TFloat},
+#line 18 "keywords.gperf"
+      {"f128",       TFloat},
+#line 37 "keywords.gperf"
+      {"false",      TKW_False},
+#line 32 "keywords.gperf"
+      {"for",        TKW_For},
+#line 30 "keywords.gperf"
+      {"if",         TKW_If},
+#line 13 "keywords.gperf"
+      {"u64",        TUInt},
+#line 34 "keywords.gperf"
+      {"null",       TKW_Null},
+      {""}, {""},
+#line 39 "keywords.gperf"
+      {"depends",    TKW_Depends},
+#line 7 "keywords.gperf"
+      {"i64",        TInt},
+#line 36 "keywords.gperf"
+      {"true",       TKW_True},
       {""}, {""},
 #line 29 "keywords.gperf"
-      {"fn",         TKeyword},
+      {"fn",         TKW_Fn},
 #line 17 "keywords.gperf"
-      {"f64",        TType},
-#line 18 "keywords.gperf"
-      {"f128",       TType},
-      {""}, {""},
-#line 30 "keywords.gperf"
-      {"if",         TKeyword},
-#line 12 "keywords.gperf"
-      {"u32",        TType},
-#line 26 "keywords.gperf"
-      {"vec4",       TType},
-      {""}, {""},
-#line 37 "keywords.gperf"
-      {"depends",    TDirective},
-#line 6 "keywords.gperf"
-      {"i32",        TType},
-#line 23 "keywords.gperf"
-      {"mat4",       TType},
-      {""}, {""},
-#line 9 "keywords.gperf"
-      {"u1",         TType},
-#line 16 "keywords.gperf"
-      {"f32",        TType},
-#line 34 "keywords.gperf"
-      {"null",       TKeyword},
-      {""}, {""}, {""},
-#line 11 "keywords.gperf"
-      {"u16",        TType},
-#line 24 "keywords.gperf"
-      {"vec2",       TType},
-      {""}, {""}, {""},
-#line 5 "keywords.gperf"
-      {"i16",        TType},
-#line 21 "keywords.gperf"
-      {"mat2",       TType},
-      {""},
-#line 33 "keywords.gperf"
-      {"return",     TKeyword},
-      {""},
-#line 15 "keywords.gperf"
-      {"f16",        TType},
-#line 39 "keywords.gperf"
-      {"file",       TDirective},
-      {""}, {""}, {""},
-#line 32 "keywords.gperf"
-      {"for",        TKeyword},
-#line 25 "keywords.gperf"
-      {"vec3",       TType},
-      {""}, {""}, {""},
-#line 19 "keywords.gperf"
-      {"str",        TType},
-#line 22 "keywords.gperf"
-      {"mat3",       TType},
-      {""}, {""}, {""},
-#line 28 "keywords.gperf"
-      {"constant",   TKeyword},
-#line 38 "keywords.gperf"
-      {"line",       TDirective},
-      {""}, {""}, {""}, {""},
+      {"f64",        TFloat},
 #line 31 "keywords.gperf"
-      {"else",       TKeyword}
+      {"else",       TKW_Else},
+      {""}, {""}, {""},
+#line 12 "keywords.gperf"
+      {"u32",        TUInt},
+      {""}, {""}, {""}, {""},
+#line 6 "keywords.gperf"
+      {"i32",        TInt},
+      {""}, {""}, {""}, {""},
+#line 16 "keywords.gperf"
+      {"f32",        TFloat},
+      {""}, {""}, {""}, {""},
+#line 19 "keywords.gperf"
+      {"str",        TString}
     };
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)

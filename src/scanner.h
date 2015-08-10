@@ -7,25 +7,45 @@
 enum ScannerToken
 {
   TInvalid,
-  TKeyword,
+
   TOperator,
-  TName,
+  TIdentifier,
   TNumber,
-  TType,
+
+  // Types
+  TInt,
+  TUInt,
+  TFloat,
+  TString,
+
+  // Control characters
+  TDot,
+  TColon,
+  TSemiColon,
+  TComma,
+  TEquals,
   TLParan,
   TRParan,
   TLCurlyB,
   TRCurlyB,
   TLSquareB,
   TRSquareB,
-  TEquals,
-  TString,
+
+  // Keywords
+  TKW_Constant,
+  TKW_Fn,
+  TKW_If,
+  TKW_Else,
+  TKW_For,
+  TKW_Return,
+  TKW_Null,
+  TKW_Break,
+  TKW_True,
+  TKW_False,
+  TKW_Depends,
+
   TComment,
-  TDot,
-  TColon,
-  TSemiColon,
-  TComma,
-  TDirective,
+
   TTotalTokenCount
 };
 

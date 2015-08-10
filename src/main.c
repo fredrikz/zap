@@ -1,12 +1,12 @@
+#include "parser.h"
 #include "scanner.h"
 #include "commandline.h"
-#include "generator/generator.h"
 
 int main( int argc, const char* const* argv )
 {
   int commandLineCreated = 0;
   int scannerCreated = 0;
-  int generatorCreated = 0;
+  int parserCreated = 0;
 
 	Options o;
 	CommandLineOptionCreate( &o );
@@ -19,20 +19,6 @@ int main( int argc, const char* const* argv )
   if ( err < 0 )
     goto quit;
 
-  Generator g;
-  if ( o._generateGrammar )
-  {
-    GeneratorCreate( &g, &o );
-    generatorCreated = 1;
-  
-    err = GeneratorGenerate( &g, &o );
-
-    if ( err < 0 )
-      goto quit;
-
-    // For now, always quit
-    goto quit;
-  }
 
 	Scanner s;
 	ScannerCreate( &s, &o );
@@ -41,15 +27,22 @@ int main( int argc, const char* const* argv )
   if ( err < 0 )
     goto quit;
 
+  Parser p;
+  ParserCreate( &p, &o );
+  parserCreated = 1;
+  err = ParserParse( &p, &o );
+  if ( err < 0 )
+    goto quit;
+
 quit:
+  if ( parserCreated )
+  {
+    ParserDestroy( &p );
+  }
+
   if ( scannerCreated )
   {
     ScannerDestroy( &s );
-  }
-
-  if ( generatorCreated )
-  {
-    GeneratorDestroy( &g );
   }
 
   if ( commandLineCreated )
