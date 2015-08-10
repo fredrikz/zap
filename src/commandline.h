@@ -12,8 +12,9 @@ typedef struct Options
   const char*     _fileName;
   Arrayuint8_t    _fileData;
 
-  const char*     _grammarFileName;
-  Arrayuint8_t    _grammarFileData;
+  const char*     _outputFileName;
+  uint8_t         _generateGrammar;
+
 } Options;
 
 

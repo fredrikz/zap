@@ -6,7 +6,7 @@ INCLUDES =
 LDFLAGS = -lm
 
 
-SRC = $(wildcard src/*.c) $(wildcard src/generator/*.c)
+SRC = $(wildcard src/*.c)
 OBJ = $(SRC:%.c=%.o)
 DEP = $(SRC:%.c=%.d)
 -include $(DEP)
