@@ -132,6 +132,20 @@ ParserParse( Parser* p, Options* o )
     break;
   }
 
+  // Print what we've found so far, even if we have errors
+  printf( "Parser pass:\n" );
+  if ( p->_depends._size )
+  {
+    printf( "[Dependencies]\n" );
+    for ( unsigned int i = 0; i < p->_depends._size; ++i )
+    {
+      String* str = &p->_depends._data[i];
+      printf( "\"%.*s\"\n", 
+          (int)( str->_end - str->_begin ),
+          str->_begin );
+    }
+  }
+
   EXPECT( TEof );
   return 1;
 }
