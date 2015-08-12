@@ -1,4 +1,7 @@
-depends "io";
+depends 
+{
+  "io"
+}
 
 fn main( str[] args : i32 )
 {

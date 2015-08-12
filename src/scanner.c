@@ -363,6 +363,7 @@ static const char* ScannerTokenStrings[] =
   "TOperator",
   "TIdentifier",
   "TNumber",
+  "TConstString",
   "TInt",
   "TUInt",
   "TFloat",
@@ -389,7 +390,8 @@ static const char* ScannerTokenStrings[] =
   "TKW_True",
   "TKW_False",
   "TKW_Depends",
-  "TComment"
+  "TComment",
+  "TEof"
 };
 
 
@@ -419,12 +421,15 @@ AddToken( enum ScannerToken token,
     ArrayToken* arr, 
     unsigned int lineNo )
 {
-  Token tok;
-  tok._token = token;
-  tok._start = *start;
-  tok._length = (unsigned char)(curr - *start);
-  tok._lineNo = lineNo;
-  ArrayAddToken( arr, &tok );
+  if ( token != TComment ) // Skip comments for now(see if we want them later)
+  {
+    Token tok;
+    tok._token = token;
+    tok._start = *start;
+    tok._length = (unsigned char)(curr - *start);
+    tok._lineNo = lineNo;
+    ArrayAddToken( arr, &tok );
+  }
   *start = curr;
 }
 
@@ -441,7 +446,7 @@ ReadCharacterString( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned in
     if ( *curr == '"'
       && *(curr-1) != '\\' )
     {
-      AddToken( TString, start, curr, arr, beginLineNo );
+      AddToken( TConstString, start, curr, arr, beginLineNo );
       ++(*start);
       return 0;
     }
@@ -766,6 +771,7 @@ ScannerScan( Scanner* s, Options* o )
   _Static_assert( sizeof(ScannerTokenStrings)/sizeof(ScannerTokenStrings[0]) == TTotalTokenCount,
       "Must be same size" );
 
+  printf( "Scanner pass:\n" );
   for ( unsigned int i = 0; i < s->_tokens._size; ++i )
   {
     Token* tok = &s->_tokens._data[i];

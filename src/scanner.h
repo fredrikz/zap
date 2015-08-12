@@ -11,6 +11,7 @@ enum ScannerToken
   TOperator,
   TIdentifier,
   TNumber,
+  TConstString,
 
   // Types
   TInt,
@@ -42,9 +43,13 @@ enum ScannerToken
   TKW_Break,
   TKW_True,
   TKW_False,
+
+  // Directives
   TKW_Depends,
 
   TComment,
+
+  TEof,
 
   TTotalTokenCount
 };
