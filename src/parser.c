@@ -1,6 +1,7 @@
 #include "parser.h"
 #include "commandline.h"
 #include "scanner.h"
+#include <stdio.h>
 
 /* grammar
  *
@@ -50,16 +51,23 @@ Accept( Parser* p, enum ScannerToken t )
 }
 
 
-static inline int
-Peek( Parser* p, enum ScannerToken t )
+
+extern const char* ScannerTokenStrings[];
+static inline int 
+Expect( Parser* p, enum ScannerToken t )
 {
-  if ( PEEK(1)._token == t )
+  if ( CURR._token == t )
   {
     NEXT;
     return 1;
   }
+  printf( "Unexpected token '%.*s' encountered; expected '%s'.\n", 
+      CURR._length, 
+      CURR._start, 
+      ScannerTokenStrings[t] );
   return 0;
 }
+#define EXPECT( TOKEN ) { if ( Expect( p, TOKEN ) == 0 ) { return 0; } }
 
 
 
@@ -84,18 +92,19 @@ static int
 Directive( Parser* p, Options* o )
 {
   (void)o;
-  if ( Accept( p, TKW_Depends ) 
-      && Accept( p, TLCurlyB ) )
+  if ( Accept( p, TKW_Depends ) )
   {
-    while ( Peek( p, TString ) )
+    EXPECT( TLCurlyB )
+    while ( CURR._token == TConstString )
     {
       String str;
       str._begin = CURR._start;
       str._end = str._begin + CURR._length;
       ArrayAddString( &p->_depends, &str );
+      NEXT;
     }
-
-    return Accept( p, TRCurlyB );
+    EXPECT( TRCurlyB )
+    return 1;
   }
   return 0;
 }
@@ -123,6 +132,7 @@ ParserParse( Parser* p, Options* o )
     break;
   }
 
-  return CURR._token == TEof ? 0 : -1;
+  EXPECT( TEof );
+  return 1;
 }
 

@@ -357,7 +357,8 @@ controlTokenTypes[256] =
 };
 
 
-static const char* ScannerTokenStrings[] =
+extern const char* ScannerTokenStrings[];
+const char* ScannerTokenStrings[] =
 {
   "TInvalid",
   "TOperator",
