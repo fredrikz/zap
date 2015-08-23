@@ -116,10 +116,39 @@ Variable( Parser* p, Options* o )
 
 
 
+static int 
+ArgumentList( Parser* p, Options* o )
+{
+  (void)p; (void)o;
+  return 0;
+}
+
+
+
+static int 
+Block( Parser* p, Options* o )
+{
+  (void)p; (void)o;
+  return 0;
+}
+
+
+
 static int
 Function( Parser* p, Options* o )
 {
-  (void)p; (void)o;
+  (void)o;
+  EXPECT( TKW_Fn );
+  EXPECT( TIdentifier );
+  EXPECT( TLParan );
+  if ( ArgumentList( p, o ) )
+  {
+    EXPECT( TRParan );
+    if ( Block( p, o ) )
+    {
+      return 1;
+    }
+  }
   return 0;
 }
 
@@ -153,7 +182,7 @@ Definition( Parser* p, Options* o )
   if ( Variable( p, o )
       || Function( p, o ) )
   {
-  
+    return 1;
   }
   return 0;
 }
