@@ -25,7 +25,7 @@ static struct BitFlag lexerOptions[] =
   { "everything", LEX_EVERYTHING }
 };
 
-static struct BitFlagData lexerOptionData = { lexerOptions, sizeof(lexerOptions)/sizeof(lexerOptions) };
+static struct BitFlagData lexerOptionData = { lexerOptions, sizeof(lexerOptions)/sizeof(lexerOptions[0]) };
 
 
 typedef struct ArgumentOption__

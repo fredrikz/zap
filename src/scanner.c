@@ -1,6 +1,7 @@
 #include "scanner.h"
 #include <string.h>
 #include <stdio.h>
+#include <alloca.h>
 #include "commandline.h"
 
 #pragma clang diagnostic push
@@ -392,6 +393,7 @@ const char* ScannerTokenStrings[] =
   "TKW_False",
   "TKW_Depends",
   "TComment",
+  "TWhitespace",
   "TEof"
 };
 
@@ -463,6 +465,38 @@ ReadCharacterString( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr,
 
 
 static inline int
+ReadWhitespace( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
+{
+  unsigned int beginLineNo = *lineNo;
+  uint8_t* curr = *start;
+  while ( curr != end )
+  {
+    enum CharType t = charTypes[*curr];
+
+    if ( t != Whitespace )
+    {
+      break;
+    }
+
+    if ( *curr == '\n' )
+    {
+      ++(*lineNo);
+    }
+
+    ++curr;
+  }
+
+  AddToken( TWhitespace, start, curr, arr, beginLineNo );
+  if ( (o->_lexerOptions & LEX_WHITESPACE) == 0 )
+  {
+    --arr->_size;
+  }
+  return 0;
+}
+
+
+
+static inline int
 ReadSingleLineComment( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
   unsigned int beginLineNo = *lineNo;
@@ -472,20 +506,17 @@ ReadSingleLineComment( Options* o, uint8_t** start, uint8_t* end, ArrayToken* ar
   {
     if ( *curr == '\n' )
     {
-      AddToken( TComment, start, curr, arr, beginLineNo );
-      if ( (o->_lexerOptions & LEX_COMMENTS) == 0 )
-      {
-        --arr->_size;
-      }
-      ++(*start);
-      ++(*lineNo);
-      return 0;
+      break;
     }
     ++curr;
   }
 
-  *start = end;
-  return -1;
+  AddToken( TComment, start, curr, arr, beginLineNo );
+  if ( (o->_lexerOptions & LEX_COMMENTS) == 0 )
+  {
+    --arr->_size;
+  }
+  return 0;
 }
 
 
@@ -676,6 +707,7 @@ ReadDirective( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lin
 int
 ScannerScan( Scanner* s, Options* o )
 {
+  printf( "Scanner pass:\n" );
   int success = 0;
 
   // assume some number of tokens to begin with
@@ -742,11 +774,7 @@ ScannerScan( Scanner* s, Options* o )
       retVal = ReadAlphaNumeric( o, &curr, end, &s->_tokens, &lineNo );
       break;
     case Whitespace:
-      if ( sourceChar == '\n' )
-      {
-        ++lineNo;
-      }
-      ++curr;
+      retVal = ReadWhitespace( o, &curr, end, &s->_tokens, &lineNo );
       break;
     case Invalid:
     default:
@@ -780,15 +808,42 @@ ScannerScan( Scanner* s, Options* o )
   _Static_assert( sizeof(ScannerTokenStrings)/sizeof(ScannerTokenStrings[0]) == TTotalTokenCount,
       "Must be same size" );
 
-  printf( "Scanner pass:\n" );
   for ( unsigned int i = 0; i < s->_tokens._size; ++i )
   {
     Token* tok = &s->_tokens._data[i];
-    printf( "[%-14s,%6u]: '%.*s'\n", 
+
+    if ( tok->_token == TWhitespace )
+    {
+      char* buf = (char*)alloca( tok->_length * 2 );
+      unsigned int currPos = 0;
+      for ( unsigned int j = 0; j < tok->_length; ++j )
+      {
+        if ( tok->_start[j] == '\n' )
+        {
+          buf[currPos] = '\\';
+          buf[currPos+1] = 'n';
+          currPos += 2;
+        }
+        else
+        {
+          buf[currPos] = '_';
+          ++currPos;
+        }
+      }
+      printf( "[%-14s,%6u]: '%.*s'\n", 
+        ScannerTokenStrings[tok->_token], 
+        tok->_lineNo, 
+        currPos,
+        buf );
+    }
+    else
+    {
+      printf( "[%-14s,%6u]: '%.*s'\n", 
         ScannerTokenStrings[tok->_token], 
         tok->_lineNo, 
         tok->_length,
         tok->_start );
+    }
   }
 
   return success;

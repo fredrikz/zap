@@ -48,6 +48,7 @@ enum ScannerToken
   TKW_Depends,
 
   TComment,
+  TWhitespace,
 
   TEof,
 

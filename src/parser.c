@@ -162,6 +162,7 @@ Definition( Parser* p, Options* o )
 int
 ParserParse( Parser* p, Options* o )
 {
+  printf( "Parser pass:\n" );
   for (;;)
   {
     if ( Directive( p, o )
@@ -174,7 +175,6 @@ ParserParse( Parser* p, Options* o )
   }
 
   // Print what we've found so far, even if we have errors
-  printf( "Parser pass:\n" );
   if ( p->_depends._size )
   {
     printf( "[Dependencies]\n" );
