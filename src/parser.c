@@ -19,8 +19,8 @@
  * | e
  *
  * Directive
- * | TKW_Depends '{' ConstStringList '}';
- *
+ * | TKW_Depends '{' ConstStringList '}'
+ * 
  * Function
  * | TKW_Fn TIdentifier TLParan Args TRParan Block
  *
@@ -30,8 +30,27 @@
  * 
  * Statement
  * | Variable Statement
+ * | e
+ *
+ * VariableDeclaration
+ * | Type TIdentifier
+ *
+ * Variable
+ * | VariableDeclaration ';'
+ * | VariableDeclaration Assignment Expression ';'
+ *
+ * Expression
  * | Expression
  *
+ * Assignment
+ * | '='
+ *
+ * Type
+ * | TInt
+ * | TUInt
+ * | TFloat
+ * | TString
+ * | TIdentifier
  *
  */
 
@@ -88,6 +107,23 @@ ParserDestroy( Parser* p )
 
 
 
+static int 
+Variable( Parser* p, Options* o )
+{
+  (void)p; (void)o;
+  return 0;
+}
+
+
+
+static int
+Function( Parser* p, Options* o )
+{
+  (void)p; (void)o;
+  return 0;
+}
+
+
 static int
 Directive( Parser* p, Options* o )
 {
@@ -110,13 +146,18 @@ Directive( Parser* p, Options* o )
 }
 
 
+
 static int
-Declaration( Parser* p, Options* o )
+Definition( Parser* p, Options* o )
 {
-  (void)p;
-  (void)o;
+  if ( Variable( p, o )
+      || Function( p, o ) )
+  {
+  
+  }
   return 0;
 }
+
 
 int
 ParserParse( Parser* p, Options* o )
@@ -124,7 +165,7 @@ ParserParse( Parser* p, Options* o )
   for (;;)
   {
     if ( Directive( p, o )
-      || Declaration( p, o ) )
+      || Definition( p, o ) )
     {
       continue;
     }

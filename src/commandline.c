@@ -2,8 +2,31 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
-typedef int (*ReadArgFn_t)( void* userData, int currArg, int argc, const char* const * argv, Options* o );
+typedef int (*ReadArgFn_t)( void* userData, void* internalData, int currArg, int argc, const char* const * argv, Options* o );
+
+struct BitFlag
+{
+  const char*     _name;
+  uint32_t        _bitFlag;
+};
+
+struct BitFlagData
+{
+  const struct BitFlag*     _options;
+  uint32_t                  _numOptions;
+};
+
+static struct BitFlag lexerOptions[] = 
+{ 
+  { "comment", LEX_COMMENTS },
+  { "whitespace", LEX_WHITESPACE },
+  { "everything", LEX_EVERYTHING }
+};
+
+static struct BitFlagData lexerOptionData = { lexerOptions, sizeof(lexerOptions)/sizeof(lexerOptions) };
+
 
 typedef struct ArgumentOption__
 {
@@ -12,14 +35,16 @@ typedef struct ArgumentOption__
   const char*     _helpText;
   ReadArgFn_t     _readArgFunc;
   void*           _userData;
+  void*           _internalData;
 } ArgumentOption;
 
 
 
   
 static int
-ReadFile( void* userData, int currArg, int argc, const char* const* argv, Options* o )
+ReadFile( void* userData, void* internalData, int currArg, int argc, const char* const* argv, Options* o )
 {
+  (void)internalData;
   if ( currArg >= argc - 1 )
   {
     printf( "Expected filename after '%s'.\n", argv[currArg] );
@@ -33,25 +58,58 @@ ReadFile( void* userData, int currArg, int argc, const char* const* argv, Option
 }
 
 
-
+/*
 static int
-SetOption( void* userData, int currArg, int argc, const char* const* argv, Options* o )
+SetOption( void* userData, void* internalData, int currArg, int argc, const char* const* argv, Options* o )
 {
-  (void)currArg; (void)argc; (void)argv;
+  (void)currArg; (void)argc; (void)argv; (void)internalData;
 
   uint8_t* base = (uint8_t*)o;
   base += (unsigned int)userData;
   memset( base, 1, 1 );
   return 1;
 } 
+*/
 
+
+static int
+SetBitFlag( void* userData, void* internalData, int currArg, int argc, const char* const* argv, Options* o )
+{
+  if ( currArg >= argc - 1 )
+  {
+    printf( "Expected 'option' after '%s'.\n", argv[currArg] );
+    return -1;
+  }
+
+  uint8_t* base = (uint8_t*)o;
+  base += (unsigned int)userData;
+
+  const struct BitFlagData* data = (const struct BitFlagData*)internalData;
+
+  for ( uint32_t i = 0; i < data->_numOptions; ++i )
+  {
+    if ( strcmp( data->_options[i]._name, argv[currArg+1] ) == 0 )
+    {
+      assert( ( ((uint32_t)base) & 0x00000003 ) == 0 );
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
+      uint32_t* bitFlags = (uint32_t*)base;
+#pragma clang diagnostic pop
+      *bitFlags |= data->_options[i]._bitFlag;
+      return 1;
+    }
+  }
+
+  printf( "Invalid 'option' after '%s'.\n", argv[currArg] );
+  return -1;
+}
 
 
 const static ArgumentOption validOptions[] = 
 {
-  { "file",       'f',      "<arg>: File to be compiled",                         &ReadFile,  (void*)offsetof(Options, _fileName) },
-  { "grammar",    'g',      ": Input/output should be treated as grammar files",  &SetOption, (void*)offsetof(Options, _generateGrammar) },
-  { "output",     'o',      "<arg>: Output file",                                 &ReadFile,  (void*)offsetof(Options, _outputFileName) }
+  { "file",       'f',      "<arg>: File to be compiled",                         &ReadFile,  (void*)offsetof(Options, _fileName), 0 },
+  { "lexer",      'l',      "<arg>: Set extra lexer options, valid args are 'comment', 'whitespace' and/or 'everything'",  &SetBitFlag, (void*)offsetof(Options, _lexerOptions), &lexerOptionData },
+  { "output",     'o',      "<arg>: Output file",                                 &ReadFile,  (void*)offsetof(Options, _outputFileName), 0 }
 };
 
 
@@ -168,7 +226,7 @@ CommandLineParse( int argc, const char* const* argv, Options* o )
     }
     else
     {
-      int skip = (*validOptions[foundOption]._readArgFunc)( validOptions[foundOption]._userData, i, argc, argv, o );
+      int skip = (*validOptions[foundOption]._readArgFunc)( validOptions[foundOption]._userData, validOptions[foundOption]._internalData, i, argc, argv, o );
 
       if ( skip < 0 )
       {

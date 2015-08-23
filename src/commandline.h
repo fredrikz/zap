@@ -6,6 +6,13 @@
 
 ARRAYTYPE(uint8_t)
 
+enum ELexExtra
+{
+  LEX_COMMENTS      = 1<<0,
+  LEX_WHITESPACE    = 1<<1,
+  LEX_EVERYTHING    = 0x7fffffff
+};
+
 typedef struct Options
 {
   const char*     _currentWorkingDir;
@@ -13,8 +20,7 @@ typedef struct Options
   Arrayuint8_t    _fileData;
 
   const char*     _outputFileName;
-  uint8_t         _generateGrammar;
-
+  uint32_t        _lexerOptions;
 } Options;
 
 

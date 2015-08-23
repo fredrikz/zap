@@ -422,23 +422,21 @@ AddToken( enum ScannerToken token,
     ArrayToken* arr, 
     unsigned int lineNo )
 {
-  if ( token != TComment ) // Skip comments for now(see if we want them later)
-  {
-    Token tok;
-    tok._token = token;
-    tok._start = *start;
-    tok._length = (unsigned char)(curr - *start);
-    tok._lineNo = lineNo;
-    ArrayAddToken( arr, &tok );
-  }
+  Token tok;
+  tok._token = token;
+  tok._start = *start;
+  tok._length = (unsigned char)(curr - *start);
+  tok._lineNo = lineNo;
+  ArrayAddToken( arr, &tok );
   *start = curr;
 }
 
 
 
 static inline int
-ReadCharacterString( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
+ReadCharacterString( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
+  (void)o;
   unsigned int beginLineNo = *lineNo;
   ++(*start);
   uint8_t* curr = *start;
@@ -465,7 +463,7 @@ ReadCharacterString( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned in
 
 
 static inline int
-ReadSingleLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
+ReadSingleLineComment( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
   unsigned int beginLineNo = *lineNo;
   *start += 2;
@@ -475,6 +473,10 @@ ReadSingleLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned 
     if ( *curr == '\n' )
     {
       AddToken( TComment, start, curr, arr, beginLineNo );
+      if ( (o->_lexerOptions & LEX_COMMENTS) == 0 )
+      {
+        --arr->_size;
+      }
       ++(*start);
       ++(*lineNo);
       return 0;
@@ -489,7 +491,7 @@ ReadSingleLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned 
 
 
 static inline int
-ReadMultiLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
+ReadMultiLineComment( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
   unsigned int beginLineNo = *lineNo;
   *start += 2;
@@ -511,6 +513,10 @@ ReadMultiLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned i
         {
           AddToken( TComment, start, curr, arr, beginLineNo );
           *start += 2;
+          if ( (o->_lexerOptions & LEX_COMMENTS) == 0 )
+          {
+            --arr->_size;
+          }
           return 0;
         }
       }
@@ -533,8 +539,9 @@ ReadMultiLineComment( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned i
 
 
 static inline int
-ReadNumber( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
+ReadNumber( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
+  (void)o;
   uint8_t* curr = *start;
 
   unsigned int accepted = 10;
@@ -606,8 +613,9 @@ ReadNumber( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo
 
 
 static inline int
-ReadAlphaNumeric( uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
+ReadAlphaNumeric( Options* o, uint8_t** start, uint8_t* end, ArrayToken* arr, unsigned int* lineNo )
 {
+  (void)o;
   uint8_t* curr = *start;
   ++curr; // skip first, it's an 'Alpha'
 
@@ -689,19 +697,19 @@ ScannerScan( Scanner* s, Options* o )
       switch ( sourceChar )
       {
       case '"':
-        retVal = ReadCharacterString( &curr, end, &s->_tokens, &lineNo );
+        retVal = ReadCharacterString( o, &curr, end, &s->_tokens, &lineNo );
         break;
       case '/':
         if ( curr+1 != end )
         {
           if ( *(curr+1) == '/' )
           {
-            retVal = ReadSingleLineComment( &curr, end, &s->_tokens, &lineNo );
+            retVal = ReadSingleLineComment( o, &curr, end, &s->_tokens, &lineNo );
             break;
           }
           else if ( *(curr+1) == '*' )
           {
-            retVal = ReadMultiLineComment( &curr, end, &s->_tokens, &lineNo );
+            retVal = ReadMultiLineComment( o, &curr, end, &s->_tokens, &lineNo );
             break;
           }
         }
@@ -728,10 +736,10 @@ ScannerScan( Scanner* s, Options* o )
       }
       break;
     case Numeric:
-      retVal = ReadNumber( &curr, end, &s->_tokens, &lineNo );
+      retVal = ReadNumber( o, &curr, end, &s->_tokens, &lineNo );
       break;
     case Alpha:
-      retVal = ReadAlphaNumeric( &curr, end, &s->_tokens, &lineNo );
+      retVal = ReadAlphaNumeric( o, &curr, end, &s->_tokens, &lineNo );
       break;
     case Whitespace:
       if ( sourceChar == '\n' )
