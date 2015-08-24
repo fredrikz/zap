@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <alloca.h>
+#include <assert.h>
 #include "commandline.h"
 
 #pragma clang diagnostic push
@@ -807,6 +808,12 @@ ScannerScan( Scanner* s, Options* o )
 
   _Static_assert( sizeof(ScannerTokenStrings)/sizeof(ScannerTokenStrings[0]) == TTotalTokenCount,
       "Must be same size" );
+
+  if ( success == 0 )
+  {
+    assert( curr == end );
+    AddToken( TEof, &curr, end, &s->_tokens, lineNo );
+  }
 
   for ( unsigned int i = 0; i < s->_tokens._size; ++i )
   {

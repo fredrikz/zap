@@ -68,6 +68,7 @@ Accept( Parser* p, enum ScannerToken t )
   }
   return 0;
 }
+#define ACCEPT( TOKEN ) Accept( p, (TOKEN) )
 
 
 
@@ -107,6 +108,45 @@ ParserDestroy( Parser* p )
 
 
 
+static int
+VariableDeclaration( Parser* p, Options* o )
+{
+  (void)o;
+  // TODO: Accept type qualifiers first
+  TypeInfo t = { 0, 0, 0, 0, 0 };
+  if ( ACCEPT( TInt ) )
+  {
+    t._type = TypeInt;
+  }
+  else if ( ACCEPT( TUInt ) )
+  {
+    t._type = TypeUInt;
+  }
+  else if ( ACCEPT( TFloat ) )
+  {
+    t._type = TypeFloat;
+  }
+  else if ( ACCEPT( TString ) )
+  {
+    t._type = TypeString;
+  }
+  else if ( ACCEPT( TIdentifier ) )
+  {
+    t._type = TypeUDT;
+  }
+
+  if ( ACCEPT( TLSquareB ) )
+  {
+    ACCEPT( TNumber );
+    EXPECT( TRSquareB );
+  }
+
+  ACCEPT( TIdentifier );
+  return 1;
+}
+
+
+
 static int 
 Variable( Parser* p, Options* o )
 {
@@ -119,6 +159,22 @@ Variable( Parser* p, Options* o )
 static int 
 ArgumentList( Parser* p, Options* o )
 {
+  while ( VariableDeclaration( p, o ) )
+  {
+    if ( !ACCEPT( TComma ) )
+    {
+      break;
+    }
+  }
+  // Always accept empty arg lists, let caller determine validity
+  return 1;
+}
+
+
+
+static int
+Statement( Parser* p, Options* o )
+{
   (void)p; (void)o;
   return 0;
 }
@@ -128,8 +184,17 @@ ArgumentList( Parser* p, Options* o )
 static int 
 Block( Parser* p, Options* o )
 {
-  (void)p; (void)o;
-  return 0;
+  (void)o;
+  EXPECT( TLCurlyB );
+  for (;;)
+  {
+    if ( !Statement( p, o ) )
+    {
+      break;
+    }
+  }
+  EXPECT( TRCurlyB );
+  return 1;
 }
 
 
@@ -143,7 +208,18 @@ Function( Parser* p, Options* o )
   EXPECT( TLParan );
   if ( ArgumentList( p, o ) )
   {
-    EXPECT( TRParan );
+    if ( ACCEPT( TColon ) )
+    {
+      if ( ArgumentList( p, o ) )
+      {
+        EXPECT( TRParan );
+      }
+    }
+    else
+    {
+      EXPECT( TRParan );
+    }
+
     if ( Block( p, o ) )
     {
       return 1;
@@ -202,6 +278,7 @@ ParserParse( Parser* p, Options* o )
 
     break;
   }
+  EXPECT( TEof );
 
   // Print what we've found so far, even if we have errors
   if ( p->_depends._size )
@@ -216,7 +293,6 @@ ParserParse( Parser* p, Options* o )
     }
   }
 
-  EXPECT( TEof );
   return 1;
 }
 

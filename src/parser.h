@@ -13,6 +13,33 @@ typedef struct String__
 } String;
 
 
+enum TypeInfoType
+{
+  TypeInt,
+  TypeUInt,
+  TypeFloat,
+  TypeString,
+  TypeUDT
+};
+
+
+enum TypeQualifiers
+{
+  TFConst     = 1<<0,
+  TFOptional  = 1<<1,
+  TFRequired  = 1<<2 
+};
+
+typedef struct TypeInfo__
+{
+  const uint8_t*  _id;
+  unsigned char   _idLength;
+  unsigned char   _type;
+  unsigned char   _typeQualifiers;
+  uint32_t        _size; // 0 for undefined, 1 for single variables, 2+ for arrays of defined size
+} TypeInfo;
+
+
 ARRAYTYPE(String)
 
 typedef struct Parser__
